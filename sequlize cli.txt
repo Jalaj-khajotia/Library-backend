@@ -1,0 +1,13 @@
+sequelize model:create --name MyUser --attributes first_name:string,last_name:string,bio:text
+
+E:\ReviewHapi-backend\node_modules\.bin\sequelize model:create --name Images --attributes url:string	
+E:\ReviewHapi-backend\node_modules\.bin\sequelize model:create --name Reviews --attributes url:string
+
+E:\ReviewHapi-backend\node_modules\.bin\sequelize model:create --name Tag --attributes name:string
+
+E:\ReviewHapi-backend\node_modules\.bin\sequelize model:create --name Review --attributes name:string,rating:integer,description:string,userimage:string,upvote:integer,downvote:integer
+
+ name: DataTypes.STRING,
+    rating: DataTypes.INTEGER,
+    description: DataTypes.STRING,
+    userimage: DataTypes.STRING

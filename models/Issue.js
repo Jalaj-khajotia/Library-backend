@@ -11,38 +11,6 @@ IssueModel.prototype.getAllIssues = function() {
     return this.db.get('issue') || [];
 };
 
-IssueModel.prototype.findIssuesByProperty = function(prop, value) {
-    var task, i, len;
-    var products = this.getIssues();
-    var users = this.db.get('issue');
-    return new Promise(function(fulfill, reject) {
-        var tasks = products.
-        then(function(products) {
-            users.then(function(user_data) {
-                for (i = 0, len = products.length; i < len; i++) {
-                    var product = products[i];
-                    if (products[i].id == value) {
-
-                        return fulfill(product);
-                    }
-                }
-                return reject('not found');
-            }, function(error) {
-
-            });
-
-            //return reply(users);
-        }, function(error) {
-            return reject(error);
-            console.log(error);
-        });
-    });
-};
-
-IssueModel.prototype.getIssues = function() {
-    var tasks = this.getAllIssues();
-    return tasks;
-};
 
 IssueModel.prototype.getIssuesByName = function(name) {
     try {
@@ -62,7 +30,7 @@ IssueModel.prototype.getIssuesByName = function(name) {
 }
 
 IssueModel.prototype.getIssue = function(id) {
-    var task = this.findIssuesByProperty('id', id);
+    var task = this.db.getbyId('issue', id);
 
     return task;
     if (!task) {
@@ -73,20 +41,18 @@ IssueModel.prototype.getIssue = function(id) {
 
 IssueModel.prototype.addIssue = function(newTask) {  
     console.log('data from issue controller');
-    console.log(newTask);
     return this.db.set('issue', newTask);
 };
 IssueModel.prototype.addBulk = function(newTask) {  
-    console.log('data from issue controller');
-    console.log(newTask);
-    return this.db.bulkUpdate('issue', newTask);
+    console.log('data from issue controller');  
+    return this.db.bulkAdd('issue', newTask);
 };
 
-
-IssueModel.prototype.updateIssue = function(id, updatedTask) {
-    updatedTask = updatedTask.trim();
-
-    var task = this.findIssuesByProperty('id', id);
+/* 
+    Not implemented
+*/
+IssueModel.prototype.updateIssue = function(id, updatedTask) { 
+    var task = this.db.getbyId('issue', id);
 
     if (!task) {
         throw new Error('Task doesn\'t exists.');
@@ -98,7 +64,7 @@ IssueModel.prototype.updateIssue = function(id, updatedTask) {
 };
 
 IssueModel.prototype.deleteIssue = function(id) {
-    var task = this.findIssuesByProperty('id', id);
+    var task = this.db.getbyId('issue', id);
     var db = this.db;
     return task.then(function(s) {
         return db.delete('issue', id);

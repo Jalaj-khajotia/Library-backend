@@ -5,42 +5,40 @@ var CategoriesModel = require('../models/Categories');
 
 
 function CategoriesController(database) {
-    this.categoriesModel = new CategoriesModel(database); 
+    this.categoriesModel = new CategoriesModel(database);
 };
 
-// [GET] /tasks
+// [GET]
 CategoriesController.prototype.index = function(request, reply) {
-    this.categoriesModel.getCategories().
+    this.categoriesModel.getAllCategories().
     then(function(data) {
-        return reply(data);        
+        return reply(data);
     }, function(error) {
         console.log(error);
     });
 };
 
-// [GET] /tasks/{id}
+// [GET]
 CategoriesController.prototype.show = function(request, reply) {
-        try {
-            var id = request.params.id;
-            this.categoriesModel.getProduct(id).then(function(product) {
-
-               return reply(product);
-        })
-    .catch(function(err) {
-        return reply('error');
-    });
-}
-catch (e) {
-    reply(Boom.notFound(e.message));
-}
+    try {
+        var id = request.params.id;
+        this.categoriesModel.getCategory(id).then(function(product) {
+                return reply(product);
+            })
+            .catch(function(err) {
+                return reply('error');
+            });
+    } catch (e) {
+        reply(Boom.notFound(e.message));
+    }
 };
 
 // [POST] /tasks
 CategoriesController.prototype.store = function(request, reply) {
     try {
-        var value = request.payload.task;
+        var value = request.payload.category;
 
-        reply(this.categoriesModel.addUser(value))
+        reply(this.categoriesModel.addCategory(value))
             .created();
     } catch (e) {
         reply(Boom.badRequest(e.message));
@@ -51,8 +49,8 @@ CategoriesController.prototype.store = function(request, reply) {
 CategoriesController.prototype.update = function(request, reply) {
     try {
         var id = request.params.id;
-        var task = request.payload.task;
-        reply(this.categoriesModel.updateUser(id, task));
+        var task = request.payload.category;
+        reply(this.categoriesModel.updateCategory(id, task));
     } catch (e) {
         reply(Boom.notFound(e.message));
     }
@@ -62,8 +60,7 @@ CategoriesController.prototype.update = function(request, reply) {
 CategoriesController.prototype.destroy = function(request, reply) {
     try {
         var id = request.params.id;
-
-        this.categoriesModel.deleteUser(id);
+        this.categoriesModel.deleteCategory(id);
         reply().code(204);
     } catch (e) {
         reply(Boom.notFound(e.message));

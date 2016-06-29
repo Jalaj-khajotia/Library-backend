@@ -23,13 +23,7 @@ exports.register = function(server, options, next) {
             path: '/categories',
             config: {       
               auth: false,          
-                handler: categoryController.index,
-                validate: {
-                    query: Joi.object().keys({
-                        start: Joi.number().min(0),
-                        limit: Joi.number().min(1)
-                    })
-                }
+                handler: categoryController.index
             }
         },
         {

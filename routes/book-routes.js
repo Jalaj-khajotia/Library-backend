@@ -23,13 +23,7 @@ exports.register = function(server, options, next) {
             path: '/books',
             config: {        
                 auth: false,         
-                handler: bookController.index,
-                validate: {
-                    query: Joi.object().keys({
-                        start: Joi.number().min(0),
-                        limit: Joi.number().min(1)
-                    })
-                }
+                handler: bookController.index
             }
         },
         {

@@ -23,12 +23,19 @@ exports.register = function(server, options, next) {
             path: '/issues',
             config: {
                   auth: false,
-                handler: issueController.index,
+                handler: issueController.index
+            }
+        },
+        {
+            method: 'GET',
+            path: '/issuebyuserid/{id}',
+            config: {
+                  auth: false,
+                handler: issueController.getIssueByUserid,
                 validate: {
-                    query: Joi.object().keys({
-                        start: Joi.number().min(0),
-                        limit: Joi.number().min(1)
-                    })
+                    params: {
+                        id: Joi.number().integer()
+                    }
                 }
             }
         },
@@ -37,7 +44,7 @@ exports.register = function(server, options, next) {
             path: '/issue/{id}',
             config: {
                   auth: false,
-                handler: issueController.getIssueByUserid,
+                handler: issueController.show,
                 validate: {
                     params: {
                         id: Joi.number().integer()

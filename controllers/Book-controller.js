@@ -2,21 +2,17 @@
 
 var Boom = require('boom');
 var BooksModel = require('../models/Books');
-var IssueModel = require('../models/Issue');
-
 
 function BooksController(database) {
     this.booksModel = new BooksModel(database);
-    this.IssueModel = new IssueModel(database);
 };
 
 // [GET] /tasks
 BooksController.prototype.index = function(request, reply) {
 
-    this.booksModel.getBooks().
+    this.booksModel.getAllBooks().
     then(function(products) {
         return reply(products);
-        //return reply(users);
     }, function(error) {
         console.log(error);
     });
@@ -38,6 +34,11 @@ BooksController.prototype.show = function(request, reply) {
 };
 
 // [POST] /tasks
+        /*
+        "book": {"name":"sdf",
+        "price": 121
+                }
+        */
 BooksController.prototype.store = function(request, reply) {
     try {
         var value = request.payload.book;
@@ -54,7 +55,7 @@ BooksController.prototype.update = function(request, reply) {
         var book = request.payload.book;
         reply(this.booksModel.updateBook(id, book));
     } catch (e) {
-        console.log('loggin error');
+        console.log('login error');
         reply(Boom.notFound(e.message));
     }
 };

@@ -1,15 +1,12 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var User = sequelize.define('User', {
-    name: DataTypes.STRING,
-    department: DataTypes.STRING,
-    userEmail: DataTypes.STRING,
-    userPassword: DataTypes.STRING
+  var Issue_book = sequelize.define('Issue_book', {
+    returnDate: DataTypes.DATE,
+    pending: DataTypes.BOOLEAN
   }, {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
-        User.hasMany(models.Issue);
       }
     },
       timestamps: true,
@@ -17,5 +14,5 @@ module.exports = function(sequelize, DataTypes) {
       updatedAt: 'updatedAt',
       deletedAt: false
   });
-  return User;
+  return Issue_book;
 };

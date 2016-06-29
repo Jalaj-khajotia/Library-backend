@@ -9,7 +9,11 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
         Category.hasMany(models.Book);
       }
-    }
+    },
+      timestamps: true,
+      createdAt: 'createdAt',
+      updatedAt: 'updatedAt',
+      deletedAt: false
   });
   return Category;
 };

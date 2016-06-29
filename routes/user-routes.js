@@ -4,7 +4,6 @@
 var Joi = require('joi');
 var Boom = require('boom');
 var Promise = require('bluebird');
-var TasksController = require('../controllers/Tasks');
 var UsersController = require('../controllers/User-controllers.js');
 
 exports.register = function(server, options, next) {

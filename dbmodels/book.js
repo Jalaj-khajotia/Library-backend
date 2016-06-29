@@ -8,8 +8,8 @@ module.exports = function(sequelize, DataTypes) {
     available: DataTypes.INTEGER
   }, {
     classMethods: {
-      associate: function(models) {
-      
+      associate: function(models) {   
+         Book.hasMany(models.Issue_book);
       }
     },
       timestamps: true,

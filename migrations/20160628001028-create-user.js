@@ -14,7 +14,7 @@ module.exports = {
       department: {
         type: Sequelize.STRING
       },
-      usereMail: {
+      userEmail: {
         type: Sequelize.STRING
       },
       userPassword: {

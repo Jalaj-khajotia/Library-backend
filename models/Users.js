@@ -8,45 +8,15 @@ function UsersModel(database) {
 };
 
 UsersModel.prototype.getAllUsers = function() {
-    return this.db.get('users') || [];
-};
-
-UsersModel.prototype.findUsersByProperty = function(prop, value) {
-    var user, i, len;
-    var users = this.getAllUsers();
-    return new Promise(function(fulfill, reject) {
-        users.then(function(_user) {
-        
-            for (i = 0, len = _user.length; i < len; i++) {
-                user = _user[i];
-                if (_user[i].id == value) {                      
-                    return fulfill( _user[i]);
-                }
-            }
-            return reject('no user found');
-        }, function(error) {
-            return reject(error);
-        });
-    })
-
-
-};
-
-UsersModel.prototype.getUsers = function(start, limit) {
-    var tasks = this.getAllUsers();
-    // console.log(tasks);
-
-    return tasks;
-    // .slice(start, limit + 1);
+    return this.db.get('user') || [];
 };
 
 UsersModel.prototype.getUser = function(id) {
-    var task = this.findUsersByProperty('id', id);
+    var task = this.db.getbyId('user', id);
      return task;
     if (!task) {
         throw new Error('Task doesn\'t exists.');
-    }
-   
+    }   
 };
 
 UsersModel.prototype.addUser = function(newTask) {
@@ -71,11 +41,9 @@ UsersModel.prototype.addUser = function(newTask) {
     return task;
 };
 
+//          not implemented
+
 UsersModel.prototype.updateUser = function(id, updatedTask) {
-    updatedTask = updatedTask.trim();
-
-    var task = this.findTaskByProperty('id', id);
-
     if (!task) {
         throw new Error('Task doesn\'t exists.');
     }
@@ -86,19 +54,14 @@ UsersModel.prototype.updateUser = function(id, updatedTask) {
 };
 
 UsersModel.prototype.deleteUser = function(id) {
-    if (!this.findTaskByProperty('id', id)) {
-        throw new Error('Task doesn\'t exists.');
-    }
-
+    
     var task, i, len;
-    var tasks = this.getAllTasks();
+    var tasks = this.getAllUsers();
 
     for (i = 0, len = tasks.length; i < len; i++) {
         task = tasks[i];
         if (task.id === id) {
-            // Removes task
-            tasks.splice(i, 1);
-            this.db.set('tasks', tasks);
+            this.db.delete('user', tasks);
             return;
         }
     }

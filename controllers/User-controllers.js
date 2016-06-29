@@ -8,35 +8,26 @@ function UsersController(database) {
 };
 
 // [GET] /tasks
+/*
+        {"email":"jalajiitr@gmail.com",
+        "password": "pass!23"}
+*/
 UsersController.prototype.index = function(request, reply) {
-    var start = request.query.start;
-    var limit = request.query.limit;
 
-    if (start == null) {
-        start = 0
-    }
-
-    if (limit == null) {
-        limit = start + 9
-    }
-
-    this.usersModel.getUsers(start, limit).
+    this.usersModel.getAllUsers().
     then(function(users) {
-
+        console.log(users);
         for (var i = 0; i < users.length; i++) {
           
-            if (users[i].usereMail == request.payload.email) {
-
+            if (users[i].userEmail == request.payload.email) {
                 if (users[i].userPassword == request.payload.password) {
-                    var user = {                        
-                        email: users[i].usereMail,
+                    var user = {          
+                         id  :users[i].id,                 
+                        email: users[i].userEmail,
                         password: users[i].userPassword,
                         scope: 'admin'//users[i].scope
                     }
-                    //['user', 'admin', 'user-123']
-                    users[i].scope = 'admin';
-                    request.auth.session.set(user);
-                    return reply('Login Successful!');
+                    return reply(user);
                 } else {
                     return reply(Boom.unauthorized('Bad email or password'));
                 }
@@ -52,7 +43,6 @@ UsersController.prototype.index = function(request, reply) {
 // [GET] /tasks/{id}
 UsersController.prototype.show = function(request, reply) {
     try {
-        console.log('starting UsersController show');       
         var id = request.params.id;
         this.usersModel.getUser(id).then(function(user){
          reply(user);
@@ -67,10 +57,8 @@ UsersController.prototype.show = function(request, reply) {
 // [POST] /tasks
 UsersController.prototype.store = function(request, reply) {
     try {
-        var value = request.payload.task;
-
-        reply(this.usersModel.addUser(value))
-            .created();
+        var value = request.payload.user;
+        reply(this.usersModel.addUser(value));          
     } catch (e) {
         reply(Boom.badRequest(e.message));
     }
@@ -80,8 +68,7 @@ UsersController.prototype.store = function(request, reply) {
 UsersController.prototype.update = function(request, reply) {
     try {
         var id = request.params.id;
-        var task = request.payload.task;
-
+        var task = request.payload.user;
         reply(this.usersModel.updateUser(id, task));
     } catch (e) {
         reply(Boom.notFound(e.message));

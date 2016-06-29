@@ -4,40 +4,34 @@
 var Joi = require('joi');
 var Boom = require('boom');
 var Promise = require('bluebird');
-var Returncontroller = require('../controllers/Return-controller');
+var IssueBookcontroller = require('../controllers/IssueBook-controller');
 
 exports.register = function(server, options, next) {
     // Setup the controller
-    var returncontroller = new Returncontroller(options.database);
+    var issueBookcontroller = new IssueBookcontroller(options.database);
 
     // Binds all methods
     // similar to doing `returncontroller.index.bind(returncontroller);`
     // when declaring handlers
 
-    server.bind(returncontroller);      
+    server.bind(issueBookcontroller);      
 
     // Declare routes
     server.route([
         {
             method: 'GET',
-            path: '/returns',
+            path: '/issuebooks',
             config: {
                   auth: false,
-                handler: returncontroller.index,
-                validate: {
-                    query: Joi.object().keys({
-                        start: Joi.number().min(0),
-                        limit: Joi.number().min(1)
-                    })
-                }
+                handler: issueBookcontroller.index
             }
         },
         {
             method: 'GET',
-            path: '/return/{id}',
+            path: '/issuebook/{id}',
             config: {
                   auth: false,
-                handler: returncontroller.show,
+                handler: issueBookcontroller.show,
                 validate: {
                     params: {
                         id: Joi.number().integer()
@@ -47,18 +41,39 @@ exports.register = function(server, options, next) {
         },
         {
             method: 'POST',
-            path: '/return',
+            path: '/issuebook',
             config: {
                  auth: false,
-                handler: returncontroller.store
+                handler: issueBookcontroller.store
+            }
+        },
+         {
+            method: 'POST',
+            path: '/issuebooks',
+            config: {
+                 auth: false,
+                handler: issueBookcontroller.bulkStore
             }
         },
         {
             method: 'PUT',
-            path: '/return/{id}',
+            path: '/issuebookbyIssueID/{id}',
             config: {
                 auth: false,
-                handler: returncontroller.update,
+                handler: issueBookcontroller.update,
+                validate: {
+                    params: {
+                        id: Joi.number().integer()
+                    }
+                }
+            }
+        },        
+        {
+            method: 'PUT',
+            path: '/issuebooksbyIssueID/{id}',
+            config: {
+                auth: false,
+                handler: issueBookcontroller.bulkUpdate,
                 validate: {
                     params: {
                         id: Joi.number().integer()
@@ -71,7 +86,7 @@ exports.register = function(server, options, next) {
             path: '/return/{id}',
             config: {
                 auth: false,
-                handler: returncontroller.destroy,
+                handler: issueBookcontroller.destroy,
                 validate: {
                     params: {
                         id: Joi.number().integer()

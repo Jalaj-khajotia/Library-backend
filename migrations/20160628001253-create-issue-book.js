@@ -1,24 +1,18 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('Issues', {
+    return queryInterface.createTable('Issue_books', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      bookName: {
-        type: Sequelize.STRING
-      },
-      bookId: {
-        type: Sequelize.INTEGER
-      },
-      issueDate: {
+      returnDate: {
         type: Sequelize.DATE
       },
-      issueExpiry: {
-        type: Sequelize.DATE
+      pending: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +25,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Issues');
+    return queryInterface.dropTable('Issue_books');
   }
 };

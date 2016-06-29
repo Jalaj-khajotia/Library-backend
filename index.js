@@ -75,7 +75,7 @@ var plugins = [{
         database: database
     }
 }, {
-    register: require('./routes/return-routes.js'),
+    register: require('./routes/issueBook-routes.js'),
     options: {
         database: database
     }

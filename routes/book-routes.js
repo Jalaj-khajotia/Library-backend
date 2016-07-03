@@ -14,79 +14,72 @@ exports.register = function(server, options, next) {
     // similar to doing `BookController.index.bind(BookController);`
     // when declaring handlers
 
-    server.bind(bookController);      
+    server.bind(bookController);
 
     // Declare routes
-    server.route([
-        {
-            method: 'GET',
-            path: '/books',
-            config: {        
-                auth: false,         
-                handler: bookController.index
-            }
-        },
-        {
-            method: 'GET',
-            path: '/book/{id}',
-            config: {
-                  auth: false,
-                handler: bookController.show,
-                validate: {
-                    params: {
-                        id: Joi.number().integer()
-                    }
-                }
-            }
-        },
-        {
-            method: 'GET',
-            path: '/booksbycategory/{id}',
-            config: {
-                  auth: false,
-                handler: bookController.booksByCategoryId,
-                validate: {
-                    params: {
-                        id: Joi.number().integer()
-                    }
-                }
-            }
-        },
-        {
-            method: 'POST',
-            path: '/book',
-            config: {
-                 auth: false,
-                handler: bookController.store
-            }
-        },
-        {
-            method: 'PUT',
-            path: '/book/{id}',
-            config: {
-                auth: false,
-                handler: bookController.update,
-                validate: {
-                    params: {
-                        id: Joi.number().integer()
-                    }
-                }
-            }
-        },
-        {
-            method: 'DELETE',
-            path: '/book/{id}',
-            config: {
-                auth: false,
-                handler: bookController.destroy,
-                validate: {
-                    params: {
-                        id: Joi.number().integer()
-                    }
+    server.route([{
+        method: 'GET',
+        path: '/books',
+        config: {
+            auth: 'jwt',
+            handler: bookController.index
+        }
+    }, {
+        method: 'GET',
+        path: '/book/{id}',
+        config: {
+            auth: 'jwt',
+            handler: bookController.show,
+            validate: {
+                params: {
+                    id: Joi.number().integer()
                 }
             }
         }
-    ]);
+    }, {
+        method: 'GET',
+        path: '/booksbycategory/{id}',
+        config: {
+            auth: 'jwt',
+            handler: bookController.booksByCategoryId,
+            validate: {
+                params: {
+                    id: Joi.number().integer()
+                }
+            }
+        }
+    }, {
+        method: 'POST',
+        path: '/book',
+        config: {
+            auth: 'jwt',
+            handler: bookController.store
+        }
+    }, {
+        method: 'PUT',
+        path: '/book/{id}',
+        config: {
+            auth: 'jwt',
+            handler: bookController.update,
+            validate: {
+                params: {
+                    id: Joi.number().integer()
+                }
+            }
+        }
+    }, {
+        method: 'DELETE',
+        path: '/book/{id}',
+        config: {
+            auth: 'jwt',
+            handler: bookController.destroy,
+            validate: {
+                params: {
+                    id: Joi.number().integer()
+                }
+            }
+        }
+    }]);
     next();
 }
 
@@ -94,47 +87,3 @@ exports.register.attributes = {
     name: 'routes-books',
     version: '1.0.1'
 };
-
-function getValidatedUser(email, password){
-    return new Promise(function(fulfill, reject){
-
-        var users = [
-            {
-                id: 123,
-                email: 'admin@admin.com',
-                password: 'admin',
-                scope: ['user', 'admin', 'user-123']
-            },
-            {
-                id: 124,
-                email: 'guest@guest.com',
-                password: 'guest',
-                scope: ['user', 'user-124']
-            },
-            {
-                id: 125,
-                email: 'other@other.com',
-                password: 'other',
-                scope: ['user', 'user-125']
-            }
-        ];
-
-        // This is done to remove the password before being sent.
-        function grabCleanUser(user) {
-            var user = user;
-            delete user.password;
-            return user;
-        };
-
-        // very simple look up based on the user array above.
-        if (email === users[0].email && password === users[0].password) {
-            return fulfill(grabCleanUser(users[0]));
-        } else if (email === users[1].email && password === users[1].password) {
-            return fulfill(grabCleanUser(users[1]));
-        } else if (email === users[2].email && password === users[2].password) {
-            return fulfill(grabCleanUser(users[2]));
-        } else {
-            return reject(null);
-        }
-    });
-}

@@ -2,6 +2,8 @@
 
 var Boom = require('boom');
 var UsersModel = require('../models/Users');
+var JWT = require('jsonwebtoken');
+var secret = 'NeverShareYourSecret';
 
 function UsersController(database) {
     this.usersModel = new UsersModel(database);
@@ -16,26 +18,27 @@ UsersController.prototype.index = function(request, reply) {
 
     this.usersModel.getAllUsers().
     then(function(users) {
-        console.log(users);
         for (var i = 0; i < users.length; i++) {
-          
+
             if (users[i].userEmail == request.payload.email) {
                 if (users[i].userPassword == request.payload.password) {
-                    var user = {          
-                         id  :users[i].id,                 
+                    
+                    var user = {
+                        id: users[i].id,
                         email: users[i].userEmail,
-                        password: users[i].userPassword,
                         scope: 'admin',
                         name: users[i].name,
                         department: users[i].department
-                    }
+                    };
+                    var token = JWT.sign(user, secret); // synchronous
+                    user.token = token;
                     return reply(user);
                 } else {
                     return reply(Boom.unauthorized('Bad email or password'));
                 }
             }
         }
-        return reply(Boom.unauthorized('User not found'));       
+        return reply(Boom.unauthorized('User not found'));
         //return reply(users);
     }, function(error) {
         console.log(error);
@@ -46,11 +49,11 @@ UsersController.prototype.index = function(request, reply) {
 UsersController.prototype.show = function(request, reply) {
     try {
         var id = request.params.id;
-        this.usersModel.getUser(id).then(function(user){
-         reply(user);
-        }, function(error){
-        reply(error);
-        });      
+        this.usersModel.getUser(id).then(function(user) {
+            reply(user);
+        }, function(error) {
+            reply(error);
+        });
     } catch (e) {
         reply(Boom.notFound(e.message));
     }
@@ -60,7 +63,7 @@ UsersController.prototype.show = function(request, reply) {
 UsersController.prototype.store = function(request, reply) {
     try {
         var value = request.payload.user;
-        reply(this.usersModel.addUser(value));          
+        reply(this.usersModel.addUser(value));
     } catch (e) {
         reply(Boom.badRequest(e.message));
     }

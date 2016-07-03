@@ -14,66 +14,60 @@ exports.register = function(server, options, next) {
     // similar to doing `categoryController.index.bind(categoryController);`
     // when declaring handlers
 
-    server.bind(categoryController);      
+    server.bind(categoryController);
 
     // Declare routes
-    server.route([
-        {
-            method: 'GET',
-            path: '/categories',
-            config: {       
-              auth: false,          
-                handler: categoryController.index
-            }
-        },
-        {
-            method: 'GET',
-            path: '/categories/{id}',
-            config: {
-                  auth: false,
-                handler: categoryController.show,
-                validate: {
-                    params: {
-                        id: Joi.number().integer()
-                    }
-                }
-            }
-        },
-        {
-            method: 'POST',
-            path: '/categories',
-            config: {
-                 auth: false,
-                handler: categoryController.store
-            }
-        },
-        {
-            method: 'PUT',
-            path: '/categories/{id}',
-            config: {
-                auth: false,
-                handler: categoryController.update,
-                validate: {
-                    params: {
-                        id: Joi.number().integer()
-                    }
-                }
-            }
-        },
-        {
-            method: 'DELETE',
-            path: '/categories/{id}',
-            config: {
-                auth: false,
-                handler: categoryController.destroy,
-                validate: {
-                    params: {
-                        id: Joi.number().integer()
-                    }
+    server.route([{
+        method: 'GET',
+        path: '/categories',
+        config: {
+            auth: 'jwt',
+            handler: categoryController.index
+        }
+    }, {
+        method: 'GET',
+        path: '/categories/{id}',
+        config: {
+            auth: 'jwt',
+            handler: categoryController.show,
+            validate: {
+                params: {
+                    id: Joi.number().integer()
                 }
             }
         }
-    ]);
+    }, {
+        method: 'POST',
+        path: '/categories',
+        config: {
+            auth: 'jwt',
+            handler: categoryController.store
+        }
+    }, {
+        method: 'PUT',
+        path: '/categories/{id}',
+        config: {
+            auth: 'jwt',
+            handler: categoryController.update,
+            validate: {
+                params: {
+                    id: Joi.number().integer()
+                }
+            }
+        }
+    }, {
+        method: 'DELETE',
+        path: '/categories/{id}',
+        config: {
+            auth: 'jwt',
+            handler: categoryController.destroy,
+            validate: {
+                params: {
+                    id: Joi.number().integer()
+                }
+            }
+        }
+    }]);
     next();
 }
 

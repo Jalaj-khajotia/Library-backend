@@ -14,82 +14,74 @@ exports.register = function(server, options, next) {
     // similar to doing `returncontroller.index.bind(returncontroller);`
     // when declaring handlers
 
-    server.bind(issueBookcontroller);      
+    server.bind(issueBookcontroller);
 
     // Declare routes
-    server.route([
-        {
-            method: 'GET',
-            path: '/issuebooks',
-            config: {
-                  auth: false,
-                handler: issueBookcontroller.index
-            }
-        },
-        {
-            method: 'GET',
-            path: '/issuebook/{id}',
-            config: {
-                  auth: false,
-                handler: issueBookcontroller.show,
-                validate: {
-                    params: {
-                        id: Joi.number().integer()
-                    }
-                }
-            }
-        },
-        {
-            method: 'POST',
-            path: '/issuebook',
-            config: {
-                 auth: false,
-                handler: issueBookcontroller.store
-            }
-        },
-         {
-            method: 'POST',
-            path: '/issuebooks',
-            config: {
-                 auth: false,
-                handler: issueBookcontroller.bulkStore
-            }
-        },
-        {
-            method: 'PUT',
-            path: '/issuebookbyIssueID/{id}',
-            config: {
-                auth: false,
-                handler: issueBookcontroller.update,
-                validate: {
-                    params: {
-                        id: Joi.number().integer()
-                    }
-                }
-            }
-        },        
-        {
-            method: 'PUT',
-            path: '/issuebooksReturn',
-            config: {
-                auth: false,
-                handler: issueBookcontroller.bulkUpdate               
-            }
-        },
-        {
-            method: 'DELETE',
-            path: '/return/{id}',
-            config: {
-                auth: false,
-                handler: issueBookcontroller.destroy,
-                validate: {
-                    params: {
-                        id: Joi.number().integer()
-                    }
+    server.route([{
+        method: 'GET',
+        path: '/issuebooks',
+        config: {
+            auth: 'jwt',
+            handler: issueBookcontroller.index
+        }
+    }, {
+        method: 'GET',
+        path: '/issuebook/{id}',
+        config: {
+            auth: 'jwt',
+            handler: issueBookcontroller.show,
+            validate: {
+                params: {
+                    id: Joi.number().integer()
                 }
             }
         }
-    ]);
+    }, {
+        method: 'POST',
+        path: '/issuebook',
+        config: {
+            auth: 'jwt',
+            handler: issueBookcontroller.store
+        }
+    }, {
+        method: 'POST',
+        path: '/issuebooks',
+        config: {
+            auth: 'jwt',
+            handler: issueBookcontroller.bulkStore
+        }
+    }, {
+        method: 'PUT',
+        path: '/issuebookbyIssueID/{id}',
+        config: {
+            auth: 'jwt',
+            handler: issueBookcontroller.update,
+            validate: {
+                params: {
+                    id: Joi.number().integer()
+                }
+            }
+        }
+    }, {
+        method: 'PUT',
+        path: '/issuebooksReturn',
+        config: {
+            auth: 'jwt',
+            handler: issueBookcontroller.bulkUpdate
+        }
+    }, {
+        method: 'DELETE',
+        path: '/return/{id}',
+        config: {
+            auth: 'jwt',
+            handler: issueBookcontroller.destroy,
+            validate: {
+                params: {
+                    id: Joi.number().integer()
+                }
+            }
+        }
+    }]);
     next();
 }
 

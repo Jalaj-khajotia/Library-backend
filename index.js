@@ -3,6 +3,11 @@
 var Database = require('./database');
 var Hapi = require('hapi');
 var models = require('./dbmodels');
+var hapiAuthJWT = require('hapi-auth-jwt2/lib/index');
+var JWT = require('jsonwebtoken');
+
+var secret = 'NeverShareYourSecret'; // Never Share This! even in private GitHub repos!
+
 
 var database = new Database();
 var server = new Hapi.Server({ debug: { request: ['info', 'error'] } });
@@ -22,27 +27,41 @@ server.connection({
     }
 });
 
+var validate = function (decoded, request, callback) {
+  console.log(" - - - - - - - decoded token:");
+  console.log(decoded);
+  console.log(" - - - - - - - request info:");
+  console.log(request.info);
+  console.log(" - - - - - - - user agent:");
+  console.log(request.headers['user-agent']);
+
+  // do your checks to see if the person is valid
+  console.log(request.payload);
+  if (request.email) {
+    return callback(null, false);
+  }
+  else {
+    return callback(null, true);
+  }
+};
+
+
 server.register([{
-    register: require('hapi-auth-cookie')
+    register: hapiAuthJWT
 }], function(err) {
     if (err) {
         console.error('Failed to load a plugin:', err);
         throw err;
     }
 
-    // Set our server authentication strategy
-    server.auth.strategy('standard', 'cookie', {
-        password: 'somecrazycookiesecretthatcantbeguesseswouldgohere', // cookie secret
-        cookie: 'app-cookie', // Cookie name
-        isSecure: false, // required for non-https applications
-        ttl: 24 * 60 * 60 * 1000 // Set session to 1 day
-    });
+    server.auth.strategy('jwt', 'jwt',
+  { key: secret, validateFunc: validate,
+    verifyOptions: { ignoreExpiration: true }
+  });
 
-});
+  server.auth.default('jwt');
 
-server.auth.default({
-    strategy: 'standard',
-    scope: ['admin']
+
 });
 
 // Add routes
@@ -56,11 +75,6 @@ var plugins = [{
     }
 }, {
     register: require('./routes/user-routes.js'),
-    options: {
-        database: database
-    }
-},{
-    register: require('./routes/tasks.js'),
     options: {
         database: database
     }

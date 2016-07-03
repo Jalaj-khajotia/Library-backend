@@ -72,35 +72,30 @@ module.exports = function() {
     Database.prototype.set = function(key, value) {
         if (key === 'book') {
             return bookModel.build(value).save().then(function(success) {
-                console.log(success);
                 return success;
             }, function(error) {
                 return error;
             });
         } else if (key === 'category') {
             return categoryModel.build(value).save().then(function(success) {
-                console.log(success);
                 return success;
             }, function(error) {
                 return error;
             });
         } else if (key === 'user') {
             return userModel.build(value).save().then(function(success) {
-                console.log(success);
                 return success;
             }, function(error) {
                 return error;
             });
         } else if (key === 'issue') {
             return issueModel.build(value).save().then(function(success) {
-                console.log(success);
                 return success;
             }, function(error) {
                 return error;
             });
         } else if (key === 'issueBook') {
             return issueBookModel.build(value).save().then(function(success) {
-                console.log(success);
                 return success;
             }, function(error) {
                 return error;
@@ -127,10 +122,8 @@ module.exports = function() {
             });
         } else if (key === 'issueBook') {
             return issueBookModel.bulkCreate(value).then(function(success) {
-                console.log(value);
                 return success;
             }, function(error) {
-                console.log(error);
                 return error;
             });
         }
@@ -183,7 +176,6 @@ module.exports = function() {
     Database.prototype.bulkUpdate = function(key, value) {
         if (key === 'issueBook') {
             var deferred = q.defer();
-            console.log(value.length);
             for (var i = value.length - 1; i >= 0; i--) {           
              if(i != 0){
                   var result = issueBookModel.update(value[i], 

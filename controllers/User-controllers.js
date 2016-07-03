@@ -25,7 +25,9 @@ UsersController.prototype.index = function(request, reply) {
                          id  :users[i].id,                 
                         email: users[i].userEmail,
                         password: users[i].userPassword,
-                        scope: 'admin'//users[i].scope
+                        scope: 'admin',
+                        name: users[i].name,
+                        department: users[i].department
                     }
                     return reply(user);
                 } else {

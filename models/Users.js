@@ -43,14 +43,8 @@ UsersModel.prototype.addUser = function(newTask) {
 
 //          not implemented
 
-UsersModel.prototype.updateUser = function(id, updatedTask) {
-    if (!task) {
-        throw new Error('Task doesn\'t exists.');
-    }
-
-    task.value = updatedTask;
-
-    return task;
+UsersModel.prototype.updateUser = function(id, data) {
+    return this.db.update('user', data, id);
 };
 
 UsersModel.prototype.deleteUser = function(id) {

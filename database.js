@@ -172,7 +172,7 @@ module.exports = function() {
                     return error;
                 });
             } else if (key === 'user') {
-                return userModel.update(value, { where: { IssueId: id } }).then(function(success) {
+                return userModel.update(value, { where: { id: id } }).then(function(success) {
                     return success;
                 }, function(error) {
                     return error;

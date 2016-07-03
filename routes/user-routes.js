@@ -37,6 +37,14 @@ exports.register = function(server, options, next) {
                 }
             }            
         }
+    },
+    {
+        method: 'PUT',
+        path: '/user/{id}',
+        config: {
+            auth: false,
+            handler: usersController.update            
+        }
     }]);
     next();
 }

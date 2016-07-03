@@ -64,6 +64,11 @@ module.exports = function() {
         }
     };
 
+ Database.prototype.getbyCategory= function(key, id) {
+        if (key === 'book') {
+            return bookModel.findAll({ where: { CategoryId: id } ,include: [{ all: true }]});
+        } 
+    };
     Database.prototype.set = function(key, value) {
         if (key === 'book') {
             return bookModel.build(value).save().then(function(success) {

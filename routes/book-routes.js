@@ -40,6 +40,19 @@ exports.register = function(server, options, next) {
             }
         },
         {
+            method: 'GET',
+            path: '/booksbycategory/{id}',
+            config: {
+                  auth: false,
+                handler: bookController.booksByCategoryId,
+                validate: {
+                    params: {
+                        id: Joi.number().integer()
+                    }
+                }
+            }
+        },
+        {
             method: 'POST',
             path: '/book',
             config: {

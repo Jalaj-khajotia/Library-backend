@@ -20,6 +20,15 @@ BooksModel.prototype.getBook = function(id) {
     }
 };
 
+BooksModel.prototype.getBooksbyCategoryId = function(id) {
+    var task = this.db.getbyCategory('book', id);
+
+    return task;
+    if (!task) {
+        throw new Error('Task doesn\'t exists.');
+    }
+};
+
 BooksModel.prototype.addBook = function(newTask) {
     return this.db.set('book', newTask);
 };

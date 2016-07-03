@@ -33,6 +33,20 @@ BooksController.prototype.show = function(request, reply) {
     }
 };
 
+BooksController.prototype.booksByCategoryId = function(request, reply) {
+    try {
+        var id = request.params.id;
+        this.booksModel.getBooksbyCategoryId(id).then(function(product) {
+                return reply(product);
+            })
+            .catch(function(err) {
+                return reply('error');
+            });
+    } catch (e) {
+        reply(Boom.notFound(e.message));
+    }
+};
+
 // [POST] /tasks
         /*
         "book": {"name":"sdf",

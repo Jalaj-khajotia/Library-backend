@@ -9,6 +9,7 @@
 var Sequelize = require('sequelize');
 var config = require('./config/config')["development"];
 console.log('password ' + config.username);
+var q = require('q');
 var sequelize = new Sequelize(
     config.database,
     config.username,
@@ -57,7 +58,7 @@ module.exports = function() {
         } else if (key === 'user') {
             return userModel.findOne({ where: { id: id } });
         } else if (key === 'issue') {
-            return issueModel.findOne({ where: { id: id },include: [{ all: true }]  });
+            return issueModel.findOne({ where: { id: id }, include: [{ all: true }] });
         } else if (key === 'issueBook') {
             return issueBookModel.findOne({ where: { id: id } });
         }
@@ -119,7 +120,7 @@ module.exports = function() {
             }, function(error) {
                 return error;
             });
-        } else if (key === 'issueBook') {            
+        } else if (key === 'issueBook') {
             return issueBookModel.bulkCreate(value).then(function(success) {
                 console.log(value);
                 return success;
@@ -141,49 +142,55 @@ module.exports = function() {
     };
 
     Database.prototype.update = function(key, value, id) {
-        if (key === 'book') {
-            return bookModel.update(value, { where: { id: id } }).then(function(success) {
-                return value;
-            }, function(error) {
-                return error;
-            });
-        } else if (key === 'issue') {
-            return issueModel.update(value, { where: { id: id } }).then(function(success) {
-                return value;
-            }, function(error) {
-                return error;
-            });
-        } else if (key === 'issueBook') {
-            return issueBookModel.update(value, { where: { IssueId: id } }).then(function(success) {
-                return value;
-            }, function(error) {
-                return error;
-            });
-        } else if (key === 'category') {
-            return categoryModel.update(value, { where: { IssueId: id } }).then(function(success) {
-                return success;
-            }, function(error) {
-                return error;
-            });
-        } else if (key === 'user') {
-            return userModel.update(value, { where: { IssueId: id } }).then(function(success) {
-                return success;
-            }, function(error) {
-                return error;
-            });
-        }
-    }
-
-    Database.prototype.bulkUpdate = function(key, value, id) {
-        if (key === 'issueBook') {
-            return issueBookModel.findAll({ where: { IssueId: id } })
-                .then(function() {
-                    return issueBookModel.update(value)
-                }).spread(function(affectedCount, affectedRows) {
-                    return issueBookModel.findAll();
-                }).then(function(tasks) {
-                    console.log(tasks)
+            if (key === 'book') {
+                return bookModel.update(value, { where: { id: id } }).then(function(success) {
+                    return value;
+                }, function(error) {
+                    return error;
                 });
+            } else if (key === 'issue') {
+                return issueModel.update(value, { where: { id: id } }).then(function(success) {
+                    return value;
+                }, function(error) {
+                    return error;
+                });
+            } else if (key === 'issueBook') {
+                return issueBookModel.update(value, { where: { IssueId: id } }).then(function(success) {
+                    return value;
+                }, function(error) {
+                    return error;
+                });
+            } else if (key === 'category') {
+                return categoryModel.update(value, { where: { IssueId: id } }).then(function(success) {
+                    return success;
+                }, function(error) {
+                    return error;
+                });
+            } else if (key === 'user') {
+                return userModel.update(value, { where: { IssueId: id } }).then(function(success) {
+                    return success;
+                }, function(error) {
+                    return error;
+                });
+            }
+        }
+        //pass array in value and update 
+    Database.prototype.bulkUpdate = function(key, value) {
+        if (key === 'issueBook') {
+            var deferred = q.defer();
+            console.log(value.length);
+            for (var i = value.length - 1; i >= 0; i--) {           
+             if(i != 0){
+                  var result = issueBookModel.update(value[i], 
+                { where: { IssueId:  value[i].IssueId , BookId: value[i].BookId } });                
+             }else{
+                 var result = issueBookModel.update(value[i], 
+                { where: { IssueId:  value[i].IssueId , BookId: value[i].BookId } }).then(function(success){
+                     deferred.resolve(success);
+                });                 
+             }
+            };
+            return deferred.promise;
         };
     };
 

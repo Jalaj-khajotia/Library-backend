@@ -70,15 +70,10 @@ exports.register = function(server, options, next) {
         },        
         {
             method: 'PUT',
-            path: '/issuebooksbyIssueID/{id}',
+            path: '/issuebooksReturn',
             config: {
                 auth: false,
-                handler: issueBookcontroller.bulkUpdate,
-                validate: {
-                    params: {
-                        id: Joi.number().integer()
-                    }
-                }
+                handler: issueBookcontroller.bulkUpdate               
             }
         },
         {

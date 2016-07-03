@@ -71,10 +71,10 @@ IssueBookController.prototype.update = function(request, reply) {
 };
 // return multiple books
 IssueBookController.prototype.bulkUpdate = function(request, reply) {
-    try {
-        var id = request.params.id;
+    try {       
         var task = request.payload.issueBook;
-        reply(this.issueBookModel.bulkReturn(id, task.returnDate));
+        console.log(task);
+        reply(this.issueBookModel.bulkReturn(task));
     } catch (e) {
         reply(Boom.notFound(e.message));
     }

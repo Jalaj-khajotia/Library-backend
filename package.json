@@ -30,6 +30,7 @@
     "joi": "^5.0.1",
     "jsonwebtoken": "^7.0.1",
     "mysql": "^2.10.2",
+    "q": "^1.4.1",
     "sequelize": "^2.0.0-rc7"
   },
   "devDependencies": {
